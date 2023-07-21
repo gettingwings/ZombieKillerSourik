@@ -39,7 +39,7 @@ function setup() {
   player = createSprite(140, displayHeight-300, 50, 50);
   player.addImage(shooterImg)
   player.scale = 0.3
-  // player.debug = true
+  player.debug = true
   // player.debug = false
   // player.Debug =false
   // Player.debug = true
@@ -135,6 +135,8 @@ function draw() {
       z.velocityX = -0.2;
       z.addImage(brokenZombieImg);
       z.scale = 0.7;
+      z.setCollider("rectangle", 0,0,450,500);
+      
       setTimeout(()=>{z.destroy()},2000)
      
       bullets -= 1
@@ -194,7 +196,7 @@ function spawnZombies(){
     let zombie = createSprite(displayWidth-200,y);
     zombie.addImage(zombieImg);
     zombie.scale = 0.2;
-    //zombie.debug = true
+    zombie.debug = true
     zombie.setCollider("rectangle", 0,0,450,1000);
     zombie.velocityX = -3;
     zombieGroup.add(zombie);
