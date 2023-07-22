@@ -1,13 +1,12 @@
-var life = 3,score = 0;
+
 var bg,bgImg;
 var player, playerImg, shooterImg;
 var zombieGroup ,zombieImg, brokenZombieImg; 
 var gameState = 1 //play=1; end=2; won=3
-var playerCollided = false;
 var heartImg0,heartImg1,heartImg2,heartImg3,heart;
 var ammo, ammoImg, boomImg;
 var zombiesToBeKilled = 25, zombiesCreated = 0;
-var bullets = 20;
+var life = 3, bullets = 20;
 var gameEndText;
 
 function preload(){
