@@ -5,7 +5,7 @@ var zombieGroup ,zombieImg, brokenZombieImg;
 var gameState = 1 //play=1; end=2; won=3
 var heartImg0,heartImg1,heartImg2,heartImg3,heart;
 var ammo, ammoImg, boomImg;
-var zombiesToBeKilled = 25, zombiesCreated = 0;
+var zombiesToBeKilled = 25, zombiesCreated = 1;
 var life = 3, bullets = 20;
 var gameEndText;
 
@@ -30,11 +30,11 @@ function setup() {
   createCanvas(windowWidth,windowHeight);
 
   //adding the background image
-  bg = createSprite(displayWidth/2-20, displayHeight/2-40, 20, 20)
+  bg = createSprite(width/2-20, height/2-40, 20, 20)
   bg.addImage(bgImg)
-  bg.scale = 1.1
+  bg.scale = 1.2
   //creating the player sprite
-  player = createSprite(140, height-300, 50, 50);
+  player = createSprite(140, height-200, 50, 50);
   player.addImage(playerImg)
   player.scale = 0.3
   //player.debug = true
@@ -81,15 +81,21 @@ function draw() {
       player.x = player.x+30
     }
 
-    if(player.y<100) player.y = 100
-    if(player.y>height-130) player.y = height - 130
+    if(player.y<100) player.y = 100;
+    if(player.y>height-130) player.y = height - 130;
 
     //release bullets and change the image of shooter to shooting position when space is pressed
     if(keyWentDown("space")){
       player.addImage(shooterImg)
-      shootBullet();
+      if(bullets>0){
+        shootBullet();
+        bullets -= 1;
+        if(bullets==0){
+          gameState = 2; // for end: out of bullets
+          gameEndText = "You are out of bullets!!";
+        }
+      }
     }
-
     //player goes back to original standing image once we stop pressing the space bar
     if(keyWentUp("space")){
       player.addImage(playerImg)
@@ -100,14 +106,14 @@ function draw() {
     for(zombie of zombieGroup){
       if(zombie.x<-10) {
         zombie.x = width+10;
-        zombie.y = random(69,height-300);
+        zombie.y = random(70,height-300);
         zombie.velocityX *= 1.5;
       }
     }
 
     //check collision between zombies and player
     player.overlap(zombieGroup,(p,z)=>{
-      life -= 1
+      life -= 1;
       if(life<=0 ){
         gameState = 2 // for end: zombied
         gameEndText = "You were zombied!";
@@ -115,7 +121,7 @@ function draw() {
       z.destroy()
       previousY = p.y;
       p.y = -200
-      setTimeout(()=>{p.y = previousY},2000)
+      setTimeout(()=>p.y = previousY,2000)
     })
 
     //killing the zombie
@@ -123,19 +129,14 @@ function draw() {
       b.destroy();
       z.velocityX = -0.2;
       z.addImage(brokenZombieImg);
-      z.scale = 0.7;
+      z.scale = 0.5;
       z.setCollider("rectangle",0,0,50,50);
-      setTimeout(()=>{z.destroy()},2000)
-     
-      bullets -= 1
+      zombieGroup.remove(z);
+      setTimeout(()=>z.destroy(),2000);
       zombiesToBeKilled -= 1;
-      
       if(zombiesToBeKilled<=0) gameState = 3 // for win
-      if(bullets==0){
-        gameState = 2; // for end: out of bullets
-        gameEndText = "Sorry!! You are out of bullets.";
-      }
     })
+
     //collect ammo
     if(player.isTouching(ammo)){
       bullets += 10;
@@ -145,7 +146,7 @@ function draw() {
     ammo.overlap(bulletGroup,(a,b)=>{
       b.destroy();
       a.addImage(boomImg);
-      a.scale = 0.6;
+      a.scale = 0.5;
       gameState = 2; // for end: shot the ammo
       gameEndText = "You caused an explosion!!";
     })
@@ -169,7 +170,6 @@ function draw() {
 function shootBullet(){
   var bullet = createSprite(player.x + 60,player.y-20,8,8);
   bullet.velocityX = 15;
-  bullet.shapeColor = "white";
   bullet.life =  400;
   bullet.addImage(bulletImg);
   bullet.scale = 0.02;
@@ -179,12 +179,12 @@ function shootBullet(){
 function spawnZombies(){
   if(frameCount%60==0 && zombiesCreated<=25 ){
     zombiesCreated += 1;
-    let y = random(69,displayHeight-300);
+    let y = random(70, height-300);
     let zombie = createSprite(width-20,y);
     zombie.addImage(zombieImg);
-    zombie.scale = 0.2;
+    zombie.scale = 0.15;
     //zombie.debug = true
-    zombie.setCollider("rectangle",0,0,400,1000);
+    zombie.setCollider("rectangle",0,0,400,900);
     zombie.velocityX = -3;
     zombieGroup.add(zombie);
     //zombie.life = 400
