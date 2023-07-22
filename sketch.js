@@ -78,13 +78,13 @@ function draw() {
     //gameState play
 
     //moving the player up and down and making the game mobile compatible using touches
-    if(keyDown("UP_ARROW")||touches.length>0){
+    if(keyDown("UP_ARROW")){
       player.y = player.y-30
     }
-    if(keyDown("DOWN_ARROW")||touches.length>0){
+    if(keyDown("DOWN_ARROW")){
       player.y = player.y+30
     }
-    if(keyDown("RIGHT_ARROW")||touches.length>0){
+    if(keyDown("RIGHT_ARROW") && bullets<6){
       player.x = player.x+30
     }
 
@@ -109,16 +109,14 @@ function draw() {
 
     for(zombie of zombieGroup){
       if(zombie.x<-10) {
-        zombie.x = width+100;
+        zombie.x = width+10;
         zombie.y = random(69,displayHeight-300);
-        zombie.velocityX *= 1.3;
+        zombie.velocityX *= 1.5;
       }
     }
 
     //check collision between zombies and player
     player.overlap(zombieGroup,(p,z)=>{
-      //playerCollided =true  
-      // if(playerCollided == true)
       life -= 1
       if(life<=0 ){
         gameState = 2 // for end: zombied
@@ -150,7 +148,7 @@ function draw() {
     })
     //collect ammo
     if(player.isTouching(ammo)){
-      bullets += 20;
+      bullets += 10;
       player.x = 100;
     }
     //cause explosion
@@ -159,7 +157,7 @@ function draw() {
       a.addImage(boomImg);
       a.scale = 0.5;
       gameState = 2; // for end: shot the ammo
-      gameEndText = "You lost!!";
+      gameEndText = "You caused an explosion!!";
     })
   }else if(gameState == 2){
     //gamestate end
@@ -168,13 +166,13 @@ function draw() {
     zombieGroup.destroyEach();
     textAlign(CENTER);
     textSize(50);
-    text(gameEndText,displayWidth/2,displayHeight/2);
+    text(gameEndText,width/2,height/2);
   }else if(gameState == 3){
     //gameState won
     player.visible = false;
     textAlign(CENTER);
     textSize(50);
-    text("All zombies eliminated. You won!!",displayWidth/2,displayHeight/2);
+    text("All zombies eliminated. You won!!",width/2,height/2);
   }
 
 }
