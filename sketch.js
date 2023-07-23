@@ -169,7 +169,7 @@ function draw() {
 
 function shootBullet(){
   var bullet = createSprite(player.x + 60,player.y-20,8,8);
-  bullet.velocityX = 15;
+  bullet.velocityX = 17;
   bullet.life =  400;
   bullet.addImage(bulletImg);
   bullet.scale = 0.02;
